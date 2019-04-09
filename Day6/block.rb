@@ -110,3 +110,5 @@ def my_each(names)
     # end
 end
 my_each(names){|name| puts "Welcome #{name}"}
+
+puts "some other stuff"
