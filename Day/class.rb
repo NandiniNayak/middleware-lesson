@@ -192,9 +192,18 @@ puts car1.model
 puts car1.make
 puts car1.change_color
 # car1.color
-car1.make = 2000
+# car1.make = 2000
 
 
+class Sedan < Car
+  attr_accessor :fuel_type
+  def initialize(fuel_type)
+    @fuel_type = fuel_type
+  end
+end
 
-
+porshe = Sedan.new("petrol")
+puts porshe.fuel_type
+porshe.model = "porsche"
+puts porshe.model
 
