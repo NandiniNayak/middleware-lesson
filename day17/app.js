@@ -40,12 +40,12 @@ app.use(require("./routes"));
 
 // capture the error coming from the routes
 // error handling middleware
-// app.use((err, req, res, next) =>{
-//     // console.log("error logged", err);
-//     if(err && err.name === "HttpError"){
-//         return res.status(err.statusCode).send(err.message);
-//     }
-//     next();
-// })
+app.use((err, req, res, next) =>{
+    // console.log("error logged", err);
+    if(err && err.name === "HttpError"){
+        return res.status(err.statusCode).send(err.message);
+    }
+    next();
+})
 app.listen(port, () => console.log(`server running on port ${port}`));
 

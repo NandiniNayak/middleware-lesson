@@ -18,18 +18,21 @@ const validate = (req, res, next) => {
     console.log("validation middleware")
     if (req.body) {
         if (!req.body.name) {
-            // res.status(422).send("Name is required");
-            return next(HttpError(422, "Name is required"));
+            return next(new HttpError(422, "name is required"));
         }
-        if (req.body.price && req.body.price < 0) {
-            return next(HttpError(422, "Price must be greater than 0"));
-            // res.status(422).send("Price must be geater than 0");
+
+        if (req.body.price && req.body.price < 1) {
+            return next(new HttpError(422, "price must be greater than 1"));
         }
     }
     next();
 }
 
+// custom validation middleware
 // router.post("/products",validate, ProductController.create);
+
+// third party middleware
+
 router.post("/products", celebrate({
     body: {
         name: Joi.string().required(),
