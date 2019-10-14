@@ -1,22 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const ProductController = require("./controller/product_controller");
+const { celebrate, Joi, errors } = require('celebrate');
 
-// this function validates if the res.body has a name and the price of the product is greater than 1
-// router.use("/products/create/", (req, res, next) => {
-//     console.log(req.body);
-//     if(req.body) {
-//         if(!req.body.name) {
-//             res.status(422).send("Name is required");
-//         }
-//         if(req.body.price && req.body.price < 0){
-//             res.status(422).send("Price must be geater than 0");
-//         }
-//     }
-//     next();
-// })
-
-router.get("/", (req,res) => {
+router.get("/", (req,res, next) => {
+    // return next(new HttpError(404, "page not found"));
+    return next(new HttpError(404, "page not found"));
     res.send("Welcome");
 })
 
@@ -26,16 +15,28 @@ router.get("/products", (req, res) => {
 })
 
 const validate = (req, res, next) => {
+    console.log("validation middleware")
     if (req.body) {
         if (!req.body.name) {
-            res.status(422).send("Name is required");
+            // res.status(422).send("Name is required");
+            return next(HttpError(422, "Name is required"));
         }
         if (req.body.price && req.body.price < 0) {
-            res.status(422).send("Price must be geater than 0");
+            return next(HttpError(422, "Price must be greater than 0"));
+            // res.status(422).send("Price must be geater than 0");
         }
     }
     next();
 }
 
-router.post("/products",validate, ProductController.create);
+// router.post("/products",validate, ProductController.create);
+router.post("/products", celebrate({
+    body: {
+        name: Joi.string().required(),
+        price: Joi.number().min(0).integer(),
+    },
+}) , ProductController.create);
+
+router.use(errors());
+
 module.exports = router;
